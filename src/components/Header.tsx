@@ -29,7 +29,7 @@ const Header = () => {
             <Button variant="ghost" size="sm">
               Login
             </Button>
-            <Button variant="hero" size="sm">
+            <Button variant="hero" size="sm" onClick={() => window.location.href = '/dashboard'}>
               Start Free Trial
             </Button>
           </div>
