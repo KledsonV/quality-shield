@@ -4,7 +4,8 @@ import {
   Shield, 
   TestTube, 
   Brain, 
-  Settings 
+  Settings,
+  BarChart3
 } from "lucide-react";
 import { NavLink, useLocation } from "react-router-dom";
 
@@ -26,6 +27,11 @@ const menuItems = [
     title: "Overview", 
     url: "/dashboard", 
     icon: LayoutDashboard 
+  },
+  { 
+    title: "Analytics", 
+    url: "/dashboard/analytics", 
+    icon: BarChart3 
   },
   { 
     title: "Monitoring", 

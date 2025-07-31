@@ -6,6 +6,7 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import Index from "./pages/Index";
 import DashboardLayout from "./layouts/DashboardLayout";
+import Analytics from "./pages/Analytics";
 import Overview from "./pages/Overview";
 import Monitoring from "./pages/Monitoring";
 import Security from "./pages/Security";
@@ -33,6 +34,7 @@ const App = () => (
             </SidebarProvider>
           }>
             <Route index element={<Overview />} />
+            <Route path="analytics" element={<Analytics />} />
             <Route path="monitoring" element={<Monitoring />} />
             <Route path="security" element={<Security />} />
             <Route path="quality" element={<Quality />} />
