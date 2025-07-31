@@ -2,88 +2,94 @@
 @tailwind components;
 @tailwind utilities;
 
-/* InsightGuard Design System - Professional SaaS Interface */
+/* InsightGuard Design System - Premium Dark Professional Interface */
 
 @layer base {
   :root {
-    /* Primary brand colors - Professional blues */
-    --primary: 214 84% 56%;
+    /* Premium brand colors - Deep blues and electric accents */
+    --primary: 220 100% 60%;
     --primary-foreground: 0 0% 98%;
-    --primary-dark: 214 84% 46%;
-    --primary-light: 214 84% 66%;
+    --primary-dark: 220 100% 45%;
+    --primary-light: 220 100% 75%;
+    --primary-glow: 220 100% 85%;
     
-    /* Secondary colors */
-    --secondary: 220 14% 96%;
-    --secondary-foreground: 220 9% 46%;
+    /* Secondary colors - Dark grays */
+    --secondary: 220 9% 15%;
+    --secondary-foreground: 0 0% 85%;
     
-    /* Success/monitoring colors */
-    --success: 142 76% 36%;
-    --success-foreground: 0 0% 98%;
-    --success-light: 142 76% 46%;
+    /* Success/monitoring colors - Electric green */
+    --success: 142 100% 45%;
+    --success-foreground: 0 0% 8%;
+    --success-light: 142 100% 55%;
     
-    /* Warning/alert colors */
-    --warning: 38 92% 50%;
-    --warning-foreground: 0 0% 98%;
+    /* Warning/alert colors - Electric amber */
+    --warning: 38 100% 55%;
+    --warning-foreground: 0 0% 8%;
     
-    /* Danger/critical colors */
-    --danger: 0 84% 60%;
+    /* Danger/critical colors - Electric red */
+    --danger: 0 100% 65%;
     --danger-foreground: 0 0% 98%;
     
-    /* Background system */
-    --background: 0 0% 100%;
-    --foreground: 220 9% 9%;
-    --background-secondary: 220 14% 98%;
+    /* Background system - Deep blacks */
+    --background: 0 0% 5%;
+    --foreground: 0 0% 95%;
+    --background-secondary: 220 9% 8%;
+    --background-tertiary: 220 9% 12%;
     
-    /* Card system */
-    --card: 0 0% 100%;
-    --card-foreground: 220 9% 9%;
-    --card-border: 220 13% 91%;
+    /* Card system - Dark surfaces */
+    --card: 220 9% 10%;
+    --card-foreground: 0 0% 92%;
+    --card-border: 220 9% 18%;
     
     /* Interactive elements */
-    --muted: 220 14% 96%;
-    --muted-foreground: 220 9% 46%;
-    --accent: 214 84% 56%;
-    --accent-foreground: 0 0% 98%;
+    --muted: 220 9% 15%;
+    --muted-foreground: 0 0% 65%;
+    --accent: 220 100% 60%;
+    --accent-foreground: 0 0% 8%;
     
     /* Form elements */
-    --input: 220 13% 91%;
-    --input-foreground: 220 9% 9%;
-    --border: 220 13% 91%;
-    --ring: 214 84% 56%;
+    --input: 220 9% 12%;
+    --input-foreground: 0 0% 90%;
+    --border: 220 9% 18%;
+    --ring: 220 100% 60%;
     
     /* Destructive */
-    --destructive: 0 84% 60%;
+    --destructive: 0 100% 65%;
     --destructive-foreground: 0 0% 98%;
     
     /* Popover */
-    --popover: 0 0% 100%;
-    --popover-foreground: 220 9% 9%;
+    --popover: 220 9% 10%;
+    --popover-foreground: 0 0% 92%;
 
     --radius: 0.75rem;
 
-    /* Gradients */
-    --gradient-primary: linear-gradient(135deg, hsl(var(--primary)), hsl(var(--primary-dark)));
-    --gradient-hero: linear-gradient(135deg, hsl(var(--primary)) 0%, hsl(var(--primary-light)) 100%);
+    /* Premium gradients */
+    --gradient-primary: linear-gradient(135deg, hsl(var(--primary)) 0%, hsl(var(--primary-dark)) 100%);
+    --gradient-hero: linear-gradient(135deg, hsl(var(--primary)) 0%, hsl(var(--primary-light)) 50%, hsl(var(--primary-glow)) 100%);
     --gradient-card: linear-gradient(145deg, hsl(var(--card)) 0%, hsl(var(--background-secondary)) 100%);
+    --gradient-premium: linear-gradient(135deg, hsl(0 0% 8%) 0%, hsl(220 9% 12%) 50%, hsl(var(--primary) / 0.1) 100%);
+    --gradient-glow: radial-gradient(circle at 50% 50%, hsl(var(--primary) / 0.3) 0%, transparent 70%);
     
-    /* Shadows */
-    --shadow-primary: 0 10px 25px -5px hsl(var(--primary) / 0.1);
-    --shadow-card: 0 4px 16px -2px hsl(var(--primary) / 0.08);
-    --shadow-elevated: 0 20px 40px -12px hsl(var(--primary) / 0.15);
+    /* Premium shadows with glow effects */
+    --shadow-primary: 0 10px 25px -5px hsl(var(--primary) / 0.4), 0 0 40px -10px hsl(var(--primary) / 0.2);
+    --shadow-card: 0 4px 20px -2px hsl(0 0% 0% / 0.8), 0 0 30px -5px hsl(var(--primary) / 0.1);
+    --shadow-elevated: 0 20px 40px -12px hsl(0 0% 0% / 0.9), 0 0 50px -10px hsl(var(--primary) / 0.2);
+    --shadow-glow: 0 0 30px hsl(var(--primary) / 0.5);
     
     /* Animation */
     --transition-smooth: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
     --transition-fast: all 0.15s ease;
+    --transition-glow: box-shadow 0.3s ease;
 
     /* Sidebar variables */
-    --sidebar-background: 0 0% 98%;
-    --sidebar-foreground: 240 5.3% 26.1%;
-    --sidebar-primary: 240 5.9% 10%;
-    --sidebar-primary-foreground: 0 0% 98%;
-    --sidebar-accent: 240 4.8% 95.9%;
-    --sidebar-accent-foreground: 240 5.9% 10%;
-    --sidebar-border: 220 13% 91%;
-    --sidebar-ring: 217.2 91.2% 59.8%;
+    --sidebar-background: 0 0% 3%;
+    --sidebar-foreground: 0 0% 90%;
+    --sidebar-primary: 220 100% 60%;
+    --sidebar-primary-foreground: 0 0% 8%;
+    --sidebar-accent: 220 9% 12%;
+    --sidebar-accent-foreground: 0 0% 85%;
+    --sidebar-border: 220 9% 15%;
+    --sidebar-ring: 220 100% 60%;
   }
 
   .dark {
@@ -170,7 +176,7 @@
 }
 
 @layer components {
-  /* Custom component styles */
+  /* Premium component styles */
   .gradient-primary {
     background: var(--gradient-primary);
   }
@@ -181,6 +187,14 @@
   
   .gradient-card {
     background: var(--gradient-card);
+  }
+  
+  .gradient-premium {
+    background: var(--gradient-premium);
+  }
+  
+  .gradient-glow {
+    background: var(--gradient-glow);
   }
   
   .shadow-primary {
@@ -195,11 +209,32 @@
     box-shadow: var(--shadow-elevated);
   }
   
+  .shadow-glow {
+    box-shadow: var(--shadow-glow);
+  }
+  
   .transition-smooth {
     transition: var(--transition-smooth);
   }
   
   .transition-fast {
     transition: var(--transition-fast);
+  }
+  
+  .transition-glow {
+    transition: var(--transition-glow);
+  }
+  
+  /* Premium glass effect */
+  .glass-effect {
+    backdrop-filter: blur(20px);
+    background: hsl(var(--card) / 0.8);
+    border: 1px solid hsl(var(--border) / 0.5);
+  }
+  
+  /* Glow hover effects */
+  .hover-glow:hover {
+    box-shadow: var(--shadow-glow);
+    transition: var(--transition-glow);
   }
 }

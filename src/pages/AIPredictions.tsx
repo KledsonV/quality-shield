@@ -1,6 +1,7 @@
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
+import { PredictionChart } from "@/components/charts/prediction-chart";
 import { 
   Brain, 
   TrendingUp, 
@@ -254,6 +255,19 @@ const AIPredictions = () => {
               </div>
             ))}
           </div>
+        </CardContent>
+      </Card>
+
+      {/* Prediction Chart */}
+      <Card className="border-card-border glass-effect">
+        <CardHeader>
+          <CardTitle className="flex items-center gap-2">
+            <BarChart3 className="w-5 h-5" />
+            AI Prediction Analysis
+          </CardTitle>
+        </CardHeader>
+        <CardContent>
+          <PredictionChart />
         </CardContent>
       </Card>
 

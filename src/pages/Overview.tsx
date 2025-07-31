@@ -1,6 +1,11 @@
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
+import { MetricCard } from "@/components/ui/metric-card";
+import { StatusBadge } from "@/components/ui/status-badge";
+import { StatusIndicator } from "@/components/ui/status-indicator";
+import { ResponseTimeChart } from "@/components/charts/response-time-chart";
+import { UptimeChart } from "@/components/charts/uptime-chart";
 import { 
   Activity, 
   Shield, 
@@ -11,7 +16,9 @@ import {
   Plus,
   RefreshCw,
   Zap,
-  Users
+  Users,
+  BarChart3,
+  PieChart
 } from "lucide-react";
 
 const Overview = () => {
@@ -99,23 +106,17 @@ const Overview = () => {
 
       {/* Quick Stats */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-        {quickStats.map((stat, index) => {
-          const Icon = stat.icon;
-          return (
-            <Card key={index} className="border-card-border hover:shadow-card transition-smooth">
-              <CardContent className="p-6">
-                <div className="flex items-center justify-between">
-                  <div>
-                    <p className="text-sm text-muted-foreground mb-2">{stat.title}</p>
-                    <p className="text-3xl font-bold mb-1">{stat.value}</p>
-                    <p className="text-sm text-muted-foreground">{stat.change}</p>
-                  </div>
-                  <Icon className={`w-8 h-8 ${stat.color}`} />
-                </div>
-              </CardContent>
-            </Card>
-          );
-        })}
+        {quickStats.map((stat, index) => (
+          <MetricCard
+            key={index}
+            title={stat.title}
+            value={stat.value}
+            change={stat.change}
+            icon={stat.icon}
+            color={stat.color}
+            trend={index % 2 === 0 ? "up" : "neutral"}
+          />
+        ))}
       </div>
 
       <div className="grid lg:grid-cols-2 gap-6">
@@ -130,11 +131,12 @@ const Overview = () => {
           <CardContent>
             <div className="space-y-4">
               {recentAlerts.map((alert) => (
-                <div key={alert.id} className="flex items-start gap-3 p-3 rounded-lg border border-card-border">
-                  <div className={`w-2 h-2 rounded-full mt-2 ${
-                    alert.type === 'critical' ? 'bg-danger' :
-                    alert.type === 'warning' ? 'bg-warning' : 'bg-primary'
-                  }`}></div>
+                <div key={alert.id} className="flex items-start gap-3 p-3 rounded-lg border border-card-border hover:bg-background-secondary transition-fast">
+                  <StatusIndicator 
+                    status={alert.type === 'critical' ? 'critical' : alert.type === 'warning' ? 'warning' : 'healthy'} 
+                    size="sm" 
+                    pulse={alert.type === 'critical'}
+                  />
                   <div className="flex-1 min-w-0">
                     <div className="flex items-center gap-2 mb-1">
                       <Badge variant="outline" className="text-xs">{alert.endpoint}</Badge>
@@ -159,12 +161,12 @@ const Overview = () => {
           <CardContent>
             <div className="space-y-4">
               {topEndpoints.map((endpoint, index) => (
-                <div key={index} className="flex items-center justify-between p-3 rounded-lg border border-card-border">
+                <div key={index} className="flex items-center justify-between p-3 rounded-lg border border-card-border hover:bg-background-secondary transition-fast">
                   <div className="flex items-center gap-3">
-                    <div className={`w-3 h-3 rounded-full ${
-                      endpoint.status === 'healthy' ? 'bg-success' :
-                      endpoint.status === 'warning' ? 'bg-warning' : 'bg-danger'
-                    }`}></div>
+                    <StatusIndicator 
+                      status={endpoint.status as any} 
+                      size="md"
+                    />
                     <div>
                       <p className="font-medium">{endpoint.name}</p>
                       <p className="text-sm text-muted-foreground">
@@ -172,12 +174,10 @@ const Overview = () => {
                       </p>
                     </div>
                   </div>
-                  <Badge 
-                    variant={endpoint.status === 'healthy' ? 'default' : 'destructive'}
-                    className="text-xs"
-                  >
-                    {endpoint.status}
-                  </Badge>
+                  <StatusBadge 
+                    status={endpoint.status as any}
+                    size="sm"
+                  />
                 </div>
               ))}
             </div>
@@ -185,8 +185,35 @@ const Overview = () => {
         </Card>
       </div>
 
+      {/* Performance Charts */}
+      <div className="grid lg:grid-cols-2 gap-6">
+        <Card className="border-card-border glass-effect">
+          <CardHeader>
+            <CardTitle className="flex items-center gap-2">
+              <BarChart3 className="w-5 h-5" />
+              Response Time Trends
+            </CardTitle>
+          </CardHeader>
+          <CardContent>
+            <ResponseTimeChart />
+          </CardContent>
+        </Card>
+
+        <Card className="border-card-border glass-effect">
+          <CardHeader>
+            <CardTitle className="flex items-center gap-2">
+              <PieChart className="w-5 h-5" />
+              System Uptime
+            </CardTitle>
+          </CardHeader>
+          <CardContent>
+            <UptimeChart />
+          </CardContent>
+        </Card>
+      </div>
+
       {/* System Health */}
-      <Card className="border-card-border">
+      <Card className="border-card-border gradient-premium">
         <CardHeader>
           <CardTitle className="flex items-center gap-2">
             <Activity className="w-5 h-5" />
@@ -195,8 +222,8 @@ const Overview = () => {
         </CardHeader>
         <CardContent>
           <div className="grid md:grid-cols-3 gap-6">
-            <div className="text-center p-4 rounded-lg bg-success/10 border border-success/20">
-              <div className="w-12 h-12 bg-success rounded-full flex items-center justify-center mx-auto mb-3">
+            <div className="text-center p-6 rounded-lg glass-effect hover-glow transition-smooth">
+              <div className="w-12 h-12 bg-success rounded-full flex items-center justify-center mx-auto mb-3 shadow-glow">
                 <CheckCircle className="w-6 h-6 text-success-foreground" />
               </div>
               <h3 className="font-semibold text-success">APIs Healthy</h3>
@@ -204,8 +231,8 @@ const Overview = () => {
               <p className="text-sm text-muted-foreground">21 of 24 endpoints</p>
             </div>
             
-            <div className="text-center p-4 rounded-lg bg-warning/10 border border-warning/20">
-              <div className="w-12 h-12 bg-warning rounded-full flex items-center justify-center mx-auto mb-3">
+            <div className="text-center p-6 rounded-lg glass-effect hover-glow transition-smooth">
+              <div className="w-12 h-12 bg-warning rounded-full flex items-center justify-center mx-auto mb-3 shadow-glow">
                 <Clock className="w-6 h-6 text-warning-foreground" />
               </div>
               <h3 className="font-semibold text-warning">Avg Response</h3>
@@ -213,8 +240,8 @@ const Overview = () => {
               <p className="text-sm text-muted-foreground">15% improvement</p>
             </div>
             
-            <div className="text-center p-4 rounded-lg bg-primary/10 border border-primary/20">
-              <div className="w-12 h-12 bg-primary rounded-full flex items-center justify-center mx-auto mb-3">
+            <div className="text-center p-6 rounded-lg glass-effect hover-glow transition-smooth">
+              <div className="w-12 h-12 bg-primary rounded-full flex items-center justify-center mx-auto mb-3 shadow-glow">
                 <Users className="w-6 h-6 text-primary-foreground" />
               </div>
               <h3 className="font-semibold text-primary">Daily Users</h3>

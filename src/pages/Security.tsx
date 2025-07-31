@@ -2,6 +2,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Input } from "@/components/ui/input";
+import { VulnerabilityChart } from "@/components/charts/vulnerability-chart";
 import { 
   Shield, 
   AlertTriangle, 
@@ -9,7 +10,8 @@ import {
   Scan,
   Download,
   Calendar,
-  ExternalLink
+  ExternalLink,
+  PieChart
 } from "lucide-react";
 
 const Security = () => {
@@ -174,6 +176,19 @@ const Security = () => {
           </CardContent>
         </Card>
       </div>
+
+      {/* Vulnerability Distribution Chart */}
+      <Card className="border-card-border glass-effect">
+        <CardHeader>
+          <CardTitle className="flex items-center gap-2">
+            <PieChart className="w-5 h-5" />
+            Vulnerability Distribution
+          </CardTitle>
+        </CardHeader>
+        <CardContent>
+          <VulnerabilityChart />
+        </CardContent>
+      </Card>
 
       <div className="grid lg:grid-cols-2 gap-6">
         {/* Vulnerabilities */}
