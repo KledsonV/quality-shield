@@ -2,6 +2,17 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Input } from "@/components/ui/input";
+import { MetricCard } from "@/components/ui/metric-card";
+import { StatusBadge } from "@/components/ui/status-badge";
+import { StatusIndicator } from "@/components/ui/status-indicator";
+import { 
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+  DropdownMenuSeparator
+} from "@/components/ui/dropdown-menu";
+import { useToast } from "@/hooks/use-toast";
 import { 
   Activity, 
   Plus, 
@@ -11,10 +22,17 @@ import {
   TrendingUp,
   AlertCircle,
   CheckCircle2,
-  XCircle
+  XCircle,
+  Edit,
+  Trash2,
+  Settings,
+  BarChart3,
+  Pause,
+  Play
 } from "lucide-react";
 
 const Monitoring = () => {
+  const { toast } = useToast();
   const endpoints = [
     {
       id: 1,
@@ -202,12 +220,43 @@ const Monitoring = () => {
                 </div>
                 
                 <div className="flex items-center gap-2">
-                  <Button variant="outline" size="sm">
+                  <Button variant="outline" size="sm" className="hover-glow">
                     View Details
                   </Button>
-                  <Button variant="ghost" size="sm">
-                    <MoreVertical className="w-4 h-4" />
-                  </Button>
+                  <DropdownMenu>
+                    <DropdownMenuTrigger asChild>
+                      <Button variant="ghost" size="sm" className="hover-glow">
+                        <MoreVertical className="w-4 h-4" />
+                      </Button>
+                    </DropdownMenuTrigger>
+                    <DropdownMenuContent align="end" className="w-48">
+                      <DropdownMenuItem onClick={() => toast({ title: "Edit endpoint", description: "Opening edit dialog..." })}>
+                        <Edit className="w-4 h-4 mr-2" />
+                        Edit Configuration
+                      </DropdownMenuItem>
+                      <DropdownMenuItem onClick={() => toast({ title: "View analytics", description: "Loading analytics..." })}>
+                        <BarChart3 className="w-4 h-4 mr-2" />
+                        View Analytics
+                      </DropdownMenuItem>
+                      <DropdownMenuItem onClick={() => toast({ title: "Pause monitoring", description: "Monitoring paused" })}>
+                        <Pause className="w-4 h-4 mr-2" />
+                        Pause Monitoring
+                      </DropdownMenuItem>
+                      <DropdownMenuSeparator />
+                      <DropdownMenuItem onClick={() => toast({ title: "Settings", description: "Opening settings..." })}>
+                        <Settings className="w-4 h-4 mr-2" />
+                        Settings
+                      </DropdownMenuItem>
+                      <DropdownMenuSeparator />
+                      <DropdownMenuItem 
+                        onClick={() => toast({ title: "Delete endpoint", description: "Endpoint deleted", variant: "destructive" })}
+                        className="text-danger focus:text-danger"
+                      >
+                        <Trash2 className="w-4 h-4 mr-2" />
+                        Delete Endpoint
+                      </DropdownMenuItem>
+                    </DropdownMenuContent>
+                  </DropdownMenu>
                 </div>
               </div>
             ))}
