@@ -9,6 +9,7 @@ import {
   Users
 } from "lucide-react";
 import { NavLink, useLocation } from "react-router-dom";
+import { useUser } from "@/hooks/useUser";
 
 import {
   Sidebar,
@@ -68,9 +69,19 @@ const menuItems = [
 
 export function AppSidebar() {
   const { state } = useSidebar();
+  const { isOrganization } = useUser();
   const location = useLocation();
   const currentPath = location.pathname;
   const collapsed = state === "collapsed";
+
+  // Filter menu items based on user type
+  const filteredMenuItems = menuItems.filter(item => {
+    // Users page only available for organizations
+    if (item.url === "/dashboard/users") {
+      return isOrganization;
+    }
+    return true;
+  });
 
   const isActive = (path: string) => {
     if (path === "/dashboard") {
@@ -104,7 +115,7 @@ export function AppSidebar() {
           <SidebarGroupLabel>Navigation</SidebarGroupLabel>
           <SidebarGroupContent>
             <SidebarMenu>
-              {menuItems.map((item) => (
+              {filteredMenuItems.map((item) => (
                 <SidebarMenuItem key={item.title}>
                   <SidebarMenuButton asChild>
                     <NavLink 

@@ -8,7 +8,9 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle, AlertDialogTrigger } from "@/components/ui/alert-dialog";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { toast } from "@/hooks/use-toast";
+import { useUser } from "@/hooks/useUser";
 import { 
   UserPlus, 
   Mail, 
@@ -20,7 +22,9 @@ import {
   Crown,
   Eye,
   Search,
-  Filter
+  Filter,
+  UserCheck,
+  Building2
 } from "lucide-react";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
 
@@ -80,17 +84,25 @@ const roles = [
 ];
 
 const UserManagement = () => {
+  const { isOrganization } = useUser();
   const [users, setUsers] = useState(mockUsers);
   const [searchTerm, setSearchTerm] = useState("");
   const [roleFilter, setRoleFilter] = useState("all");
   const [statusFilter, setStatusFilter] = useState("all");
   const [isCreateDialogOpen, setIsCreateDialogOpen] = useState(false);
+  const [isJoinDialogOpen, setIsJoinDialogOpen] = useState(false);
   const [editingUser, setEditingUser] = useState<any>(null);
   const [newUser, setNewUser] = useState({
     email: "",
     firstName: "",
     lastName: "",
     role: "MEMBER"
+  });
+  const [joinRequest, setJoinRequest] = useState({
+    email: "",
+    firstName: "",
+    lastName: "",
+    organizationCode: ""
   });
 
   const getRoleIcon = (role: string) => {
@@ -114,6 +126,48 @@ const UserManagement = () => {
     
     return matchesSearch && matchesRole && matchesStatus;
   });
+
+  const handleJoinOrganization = () => {
+    if (!joinRequest.email || !joinRequest.firstName || !joinRequest.lastName || !joinRequest.organizationCode) {
+      toast({
+        title: "Erro",
+        description: "Todos os campos são obrigatórios",
+        variant: "destructive"
+      });
+      return;
+    }
+
+    // Mock organization code validation
+    if (joinRequest.organizationCode !== "ACME2024") {
+      toast({
+        title: "Erro",
+        description: "Código da organização inválido",
+        variant: "destructive"
+      });
+      return;
+    }
+
+    const user = {
+      id: String(users.length + 1),
+      email: joinRequest.email,
+      firstName: joinRequest.firstName,
+      lastName: joinRequest.lastName,
+      role: "MEMBER",
+      status: "pending",
+      lastLogin: null,
+      createdAt: new Date().toISOString(),
+      avatar: null
+    };
+
+    setUsers([...users, user]);
+    setJoinRequest({ email: "", firstName: "", lastName: "", organizationCode: "" });
+    setIsJoinDialogOpen(false);
+    
+    toast({
+      title: "Solicitação enviada",
+      description: "Sua solicitação para ingressar na organização foi enviada para aprovação",
+    });
+  };
 
   const handleCreateUser = () => {
     if (!newUser.email || !newUser.firstName || !newUser.lastName) {
@@ -209,12 +263,97 @@ const UserManagement = () => {
       {/* Header */}
       <div className="flex items-center justify-between">
         <div>
-          <h2 className="text-2xl font-bold tracking-tight">Gerenciamento de Usuários</h2>
+          <h2 className="text-2xl font-bold tracking-tight">
+            {isOrganization ? "Gerenciamento de Usuários" : "Ingressar em Organização"}
+          </h2>
           <p className="text-muted-foreground">
-            Gerencie os membros da sua organização e suas permissões
+            {isOrganization 
+              ? "Gerencie os membros da sua organização e suas permissões"
+              : "Solicite acesso para ingressar em uma organização existente"
+            }
           </p>
         </div>
         
+        <div className="flex gap-2">
+          {/* Join Organization Button (for individual users) */}
+          {!isOrganization && (
+          <Dialog open={isJoinDialogOpen} onOpenChange={setIsJoinDialogOpen}>
+            <DialogTrigger asChild>
+              <Button variant="outline" className="flex items-center gap-2">
+                <Building2 className="w-4 h-4" />
+                Ingressar em Organização
+              </Button>
+            </DialogTrigger>
+            <DialogContent>
+              <DialogHeader>
+                <DialogTitle>Ingressar em Organização</DialogTitle>
+                <DialogDescription>
+                  Solicite acesso para ingressar em uma organização existente
+                </DialogDescription>
+              </DialogHeader>
+              
+              <div className="space-y-4">
+                <div className="grid grid-cols-2 gap-4">
+                  <div className="space-y-2">
+                    <Label htmlFor="joinFirstName">Nome</Label>
+                    <Input
+                      id="joinFirstName"
+                      value={joinRequest.firstName}
+                      onChange={(e) => setJoinRequest({ ...joinRequest, firstName: e.target.value })}
+                      placeholder="Nome"
+                    />
+                  </div>
+                  <div className="space-y-2">
+                    <Label htmlFor="joinLastName">Sobrenome</Label>
+                    <Input
+                      id="joinLastName"
+                      value={joinRequest.lastName}
+                      onChange={(e) => setJoinRequest({ ...joinRequest, lastName: e.target.value })}
+                      placeholder="Sobrenome"
+                    />
+                  </div>
+                </div>
+                
+                <div className="space-y-2">
+                  <Label htmlFor="joinEmail">Email</Label>
+                  <Input
+                    id="joinEmail"
+                    type="email"
+                    value={joinRequest.email}
+                    onChange={(e) => setJoinRequest({ ...joinRequest, email: e.target.value })}
+                    placeholder="email@exemplo.com"
+                  />
+                </div>
+                
+                <div className="space-y-2">
+                  <Label htmlFor="orgCode">Código da Organização</Label>
+                  <Input
+                    id="orgCode"
+                    value={joinRequest.organizationCode}
+                    onChange={(e) => setJoinRequest({ ...joinRequest, organizationCode: e.target.value })}
+                    placeholder="Ex: ACME2024"
+                  />
+                  <p className="text-xs text-muted-foreground">
+                    Solicite o código da organização ao administrador
+                  </p>
+                </div>
+              </div>
+              
+              <DialogFooter>
+                <Button variant="outline" onClick={() => setIsJoinDialogOpen(false)}>
+                  Cancelar
+                </Button>
+                <Button onClick={handleJoinOrganization}>
+                  <UserCheck className="w-4 h-4 mr-2" />
+                  Solicitar Acesso
+                </Button>
+              </DialogFooter>
+            </DialogContent>
+          </Dialog>
+          )}
+
+          {/* Invite User Button (for organizations) */}
+          {isOrganization && (
         <Dialog open={isCreateDialogOpen} onOpenChange={setIsCreateDialogOpen}>
           <DialogTrigger asChild>
             <Button className="flex items-center gap-2">
@@ -297,8 +436,13 @@ const UserManagement = () => {
             </DialogFooter>
           </DialogContent>
         </Dialog>
+        )}
+        </div>
       </div>
 
+      {/* Content based on user type */}
+      {isOrganization ? (
+      <>
       {/* Stats Cards */}
       <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
         <Card>
@@ -593,6 +737,38 @@ const UserManagement = () => {
             </DialogFooter>
           </DialogContent>
         </Dialog>
+      )}
+      </>
+      ) : (
+        /* Individual User View */
+        <Card>
+          <CardHeader>
+            <CardTitle>Ingressar em uma Organização</CardTitle>
+            <CardDescription>
+              Como usuário individual, você pode solicitar acesso para ingressar em uma organização existente
+            </CardDescription>
+          </CardHeader>
+          <CardContent className="space-y-4">
+            <div className="text-center py-8">
+              <Building2 className="w-16 h-16 mx-auto text-muted-foreground mb-4" />
+              <h3 className="text-lg font-semibold mb-2">Solicite acesso a uma organização</h3>
+              <p className="text-muted-foreground mb-6 max-w-md mx-auto">
+                Para ingressar em uma organização, você precisa do código de convite fornecido pelo administrador.
+                Clique no botão acima para enviar sua solicitação.
+              </p>
+              
+              <div className="space-y-2 text-sm text-muted-foreground">
+                <p><strong>Benefícios de ingressar em uma organização:</strong></p>
+                <ul className="list-disc list-inside space-y-1 max-w-md mx-auto">
+                  <li>Monitoramento colaborativo de endpoints</li>
+                  <li>Compartilhamento de alertas e relatórios</li>
+                  <li>Gestão centralizada de segurança</li>
+                  <li>Limites de uso expandidos</li>
+                </ul>
+              </div>
+            </div>
+          </CardContent>
+        </Card>
       )}
     </div>
   );
