@@ -56,6 +56,21 @@ const DashboardLayout = () => {
             </div>
             
             <div className="flex items-center gap-4">
+              {/* User Type Indicator */}
+              <div className="flex items-center gap-2 px-3 py-1 rounded-full bg-muted/50">
+                {isOrganization ? (
+                  <div className="flex items-center gap-2 text-sm">
+                    <Building2 className="w-4 h-4 text-primary" />
+                    <span className="font-medium text-primary">Organization</span>
+                  </div>
+                ) : (
+                  <div className="flex items-center gap-2 text-sm">
+                    <User className="w-4 h-4 text-blue-600" />
+                    <span className="font-medium text-blue-600">Individual</span>
+                  </div>
+                )}
+              </div>
+
               {/* System Status */}
               <div className="flex items-center gap-2 text-sm text-muted-foreground">
                 <div className="w-2 h-2 bg-success rounded-full animate-pulse"></div>

@@ -43,8 +43,10 @@ const mockIndividualUser: User = {
 };
 
 export function UserProvider({ children }: { children: ReactNode }) {
-  // For demo purposes, you can switch between organization and individual user
-  const [user, setUser] = useState<User | null>(mockUser); // Change to mockIndividualUser to test individual user
+  // EASY SWITCH: Change between mockUser (organization) and mockIndividualUser (individual)
+  // 🏢 Organization User: mockUser 
+  // 👤 Individual User: mockIndividualUser
+  const [user, setUser] = useState<User | null>(mockUser);
 
   const isOrganization = !!user?.organizationId;
 

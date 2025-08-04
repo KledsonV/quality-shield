@@ -352,91 +352,192 @@ const UserManagement = () => {
           </Dialog>
           )}
 
-          {/* Invite User Button (for organizations) */}
+          {/* Create User Actions (for organizations) */}
           {isOrganization && (
-        <Dialog open={isCreateDialogOpen} onOpenChange={setIsCreateDialogOpen}>
-          <DialogTrigger asChild>
-            <Button className="flex items-center gap-2">
-              <UserPlus className="w-4 h-4" />
-              Convidar Usuário
-            </Button>
-          </DialogTrigger>
-          <DialogContent>
-            <DialogHeader>
-              <DialogTitle>Convidar Novo Usuário</DialogTitle>
-              <DialogDescription>
-                Envie um convite para adicionar um novo membro à organização
-              </DialogDescription>
-            </DialogHeader>
-            
-            <div className="space-y-4">
-              <div className="grid grid-cols-2 gap-4">
-                <div className="space-y-2">
-                  <Label htmlFor="firstName">Nome</Label>
-                  <Input
-                    id="firstName"
-                    value={newUser.firstName}
-                    onChange={(e) => setNewUser({ ...newUser, firstName: e.target.value })}
-                    placeholder="Nome"
-                  />
-                </div>
-                <div className="space-y-2">
-                  <Label htmlFor="lastName">Sobrenome</Label>
-                  <Input
-                    id="lastName"
-                    value={newUser.lastName}
-                    onChange={(e) => setNewUser({ ...newUser, lastName: e.target.value })}
-                    placeholder="Sobrenome"
-                  />
-                </div>
-              </div>
-              
-              <div className="space-y-2">
-                <Label htmlFor="email">Email</Label>
-                <Input
-                  id="email"
-                  type="email"
-                  value={newUser.email}
-                  onChange={(e) => setNewUser({ ...newUser, email: e.target.value })}
-                  placeholder="email@exemplo.com"
-                />
-              </div>
-              
-              <div className="space-y-2">
-                <Label htmlFor="role">Função</Label>
-                <Select value={newUser.role} onValueChange={(value) => setNewUser({ ...newUser, role: value })}>
-                  <SelectTrigger>
-                    <SelectValue />
-                  </SelectTrigger>
-                  <SelectContent>
-                    {roles.filter(role => role.value !== "OWNER").map((role) => {
-                      const Icon = role.icon;
-                      return (
-                        <SelectItem key={role.value} value={role.value}>
-                          <div className="flex items-center gap-2">
-                            <Icon className="w-4 h-4" />
-                            {role.label}
-                          </div>
-                        </SelectItem>
-                      );
-                    })}
-                  </SelectContent>
-                </Select>
-              </div>
+            <div className="flex gap-2">
+              <Dialog open={isCreateDialogOpen} onOpenChange={setIsCreateDialogOpen}>
+                <DialogTrigger asChild>
+                  <Button variant="outline" className="flex items-center gap-2">
+                    <UserPlus className="w-4 h-4" />
+                    Criar Usuário
+                  </Button>
+                </DialogTrigger>
+                <DialogContent>
+                  <DialogHeader>
+                    <DialogTitle>Criar Novo Usuário</DialogTitle>
+                    <DialogDescription>
+                      Crie um novo usuário diretamente na organização
+                    </DialogDescription>
+                  </DialogHeader>
+                  
+                  <div className="space-y-4">
+                    <div className="grid grid-cols-2 gap-4">
+                      <div className="space-y-2">
+                        <Label htmlFor="createFirstName">Nome</Label>
+                        <Input
+                          id="createFirstName"
+                          value={newUser.firstName}
+                          onChange={(e) => setNewUser({ ...newUser, firstName: e.target.value })}
+                          placeholder="Nome"
+                        />
+                      </div>
+                      <div className="space-y-2">
+                        <Label htmlFor="createLastName">Sobrenome</Label>
+                        <Input
+                          id="createLastName"
+                          value={newUser.lastName}
+                          onChange={(e) => setNewUser({ ...newUser, lastName: e.target.value })}
+                          placeholder="Sobrenome"
+                        />
+                      </div>
+                    </div>
+                    
+                    <div className="space-y-2">
+                      <Label htmlFor="createEmail">Email</Label>
+                      <Input
+                        id="createEmail"
+                        type="email"
+                        value={newUser.email}
+                        onChange={(e) => setNewUser({ ...newUser, email: e.target.value })}
+                        placeholder="email@exemplo.com"
+                      />
+                    </div>
+                    
+                    <div className="space-y-2">
+                      <Label htmlFor="createRole">Função</Label>
+                      <Select value={newUser.role} onValueChange={(value) => setNewUser({ ...newUser, role: value })}>
+                        <SelectTrigger>
+                          <SelectValue />
+                        </SelectTrigger>
+                        <SelectContent>
+                          {roles.filter(role => role.value !== "OWNER").map((role) => {
+                            const Icon = role.icon;
+                            return (
+                              <SelectItem key={role.value} value={role.value}>
+                                <div className="flex items-center gap-2">
+                                  <Icon className="w-4 h-4" />
+                                  {role.label}
+                                </div>
+                              </SelectItem>
+                            );
+                          })}
+                        </SelectContent>
+                      </Select>
+                    </div>
+                  </div>
+                  
+                  <DialogFooter>
+                    <Button variant="outline" onClick={() => setIsCreateDialogOpen(false)}>
+                      Cancelar
+                    </Button>
+                    <Button onClick={() => {
+                      const user = {
+                        id: String(users.length + 1),
+                        ...newUser,
+                        status: "active",
+                        lastLogin: new Date().toISOString(),
+                        createdAt: new Date().toISOString(),
+                        avatar: null
+                      };
+                      setUsers([...users, user]);
+                      setNewUser({ email: "", firstName: "", lastName: "", role: "MEMBER" });
+                      setIsCreateDialogOpen(false);
+                      toast({
+                        title: "Usuário criado",
+                        description: `Usuário ${user.firstName} ${user.lastName} foi criado com sucesso`,
+                      });
+                    }}>
+                      <UserPlus className="w-4 h-4 mr-2" />
+                      Criar Usuário
+                    </Button>
+                  </DialogFooter>
+                </DialogContent>
+              </Dialog>
+
+              <Dialog>
+                <DialogTrigger asChild>
+                  <Button className="flex items-center gap-2">
+                    <Mail className="w-4 h-4" />
+                    Convidar por Email
+                  </Button>
+                </DialogTrigger>
+                <DialogContent>
+                  <DialogHeader>
+                    <DialogTitle>Convidar Novo Usuário</DialogTitle>
+                    <DialogDescription>
+                      Envie um convite para adicionar um novo membro à organização
+                    </DialogDescription>
+                  </DialogHeader>
+                  
+                  <div className="space-y-4">
+                    <div className="grid grid-cols-2 gap-4">
+                      <div className="space-y-2">
+                        <Label htmlFor="inviteFirstName">Nome</Label>
+                        <Input
+                          id="inviteFirstName"
+                          value={newUser.firstName}
+                          onChange={(e) => setNewUser({ ...newUser, firstName: e.target.value })}
+                          placeholder="Nome"
+                        />
+                      </div>
+                      <div className="space-y-2">
+                        <Label htmlFor="inviteLastName">Sobrenome</Label>
+                        <Input
+                          id="inviteLastName"
+                          value={newUser.lastName}
+                          onChange={(e) => setNewUser({ ...newUser, lastName: e.target.value })}
+                          placeholder="Sobrenome"
+                        />
+                      </div>
+                    </div>
+                    
+                    <div className="space-y-2">
+                      <Label htmlFor="inviteEmail">Email</Label>
+                      <Input
+                        id="inviteEmail"
+                        type="email"
+                        value={newUser.email}
+                        onChange={(e) => setNewUser({ ...newUser, email: e.target.value })}
+                        placeholder="email@exemplo.com"
+                      />
+                    </div>
+                    
+                    <div className="space-y-2">
+                      <Label htmlFor="inviteRole">Função</Label>
+                      <Select value={newUser.role} onValueChange={(value) => setNewUser({ ...newUser, role: value })}>
+                        <SelectTrigger>
+                          <SelectValue />
+                        </SelectTrigger>
+                        <SelectContent>
+                          {roles.filter(role => role.value !== "OWNER").map((role) => {
+                            const Icon = role.icon;
+                            return (
+                              <SelectItem key={role.value} value={role.value}>
+                                <div className="flex items-center gap-2">
+                                  <Icon className="w-4 h-4" />
+                                  {role.label}
+                                </div>
+                              </SelectItem>
+                            );
+                          })}
+                        </SelectContent>
+                      </Select>
+                    </div>
+                  </div>
+                  
+                  <DialogFooter>
+                    <Button variant="outline" onClick={() => setIsCreateDialogOpen(false)}>
+                      Cancelar
+                    </Button>
+                    <Button onClick={handleCreateUser}>
+                      <Mail className="w-4 h-4 mr-2" />
+                      Enviar Convite
+                    </Button>
+                  </DialogFooter>
+                </DialogContent>
+              </Dialog>
             </div>
-            
-            <DialogFooter>
-              <Button variant="outline" onClick={() => setIsCreateDialogOpen(false)}>
-                Cancelar
-              </Button>
-              <Button onClick={handleCreateUser}>
-                <Mail className="w-4 h-4 mr-2" />
-                Enviar Convite
-              </Button>
-            </DialogFooter>
-          </DialogContent>
-        </Dialog>
-        )}
+          )}
         </div>
       </div>
 
