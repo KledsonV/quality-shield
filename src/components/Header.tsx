@@ -1,5 +1,6 @@
 import { Button } from "@/components/ui/button";
-import { Shield, BarChart3, Settings } from "lucide-react";
+import { Shield } from "lucide-react";
+import { Link } from "react-router-dom";
 
 const Header = () => {
   return (
@@ -26,12 +27,16 @@ const Header = () => {
           </nav>
           
           <div className="flex items-center gap-4">
-            <Button variant="ghost" size="sm">
-              Login
-            </Button>
-            <Button variant="hero" size="sm" onClick={() => window.location.href = '/dashboard'}>
-              Start Free Trial
-            </Button>
+            <Link to="/login">
+              <Button variant="ghost" size="sm">
+                Sign In
+              </Button>
+            </Link>
+            <Link to="/register">
+              <Button variant="hero" size="sm">
+                Start Free Trial
+              </Button>
+            </Link>
           </div>
         </div>
       </div>

@@ -50,7 +50,8 @@ const Monitoring = () => {
       avgResponse: "127ms",
       lastCheck: "30s ago",
       requests24h: "12.5K",
-      isActive: true
+      isActive: true,
+      section: "Authentication"
     },
     {
       id: 2,
@@ -62,7 +63,8 @@ const Monitoring = () => {
       avgResponse: "245ms",
       lastCheck: "1m ago",
       requests24h: "8.2K",
-      isActive: true
+      isActive: true,
+      section: "Authentication"
     },
     {
       id: 3,
@@ -74,7 +76,8 @@ const Monitoring = () => {
       avgResponse: "1.2s",
       lastCheck: "5m ago",
       requests24h: "3.1K",
-      isActive: false
+      isActive: false,
+      section: "Payments"
     },
     {
       id: 4,
@@ -86,7 +89,8 @@ const Monitoring = () => {
       avgResponse: "89ms",
       lastCheck: "15s ago",
       requests24h: "6.8K",
-      isActive: true
+      isActive: true,
+      section: "Catalog"
     }
   ]);
 
@@ -94,16 +98,36 @@ const Monitoring = () => {
     name: "",
     method: "GET",
     url: "",
-    description: ""
+    description: "",
+    section: ""
   });
+  const [sections] = useState([
+    "Authentication", 
+    "Payments", 
+    "Catalog", 
+    "Analytics", 
+    "Notifications",
+    "Admin"
+  ]);
   const [editingEndpoint, setEditingEndpoint] = useState<any>(null);
   const [isAddDialogOpen, setIsAddDialogOpen] = useState(false);
   const [isEditDialogOpen, setIsEditDialogOpen] = useState(false);
   const [filter, setFilter] = useState("all");
+  const [selectedSection, setSelectedSection] = useState("all");
+  const [searchTerm, setSearchTerm] = useState("");
+  
   const filteredEndpoints = endpoints.filter(endpoint => {
-    if (filter === "healthy") return endpoint.status === "healthy";
-    if (filter === "issues") return endpoint.status !== "healthy";
-    return true;
+    const matchesFilter = filter === "all" ? true :
+                         filter === "healthy" ? endpoint.status === "healthy" :
+                         endpoint.status !== "healthy";
+    
+    const matchesSection = selectedSection === "all" || endpoint.section === selectedSection;
+    
+    const matchesSearch = searchTerm === "" || 
+                         endpoint.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+                         endpoint.url.toLowerCase().includes(searchTerm.toLowerCase());
+    
+    return matchesFilter && matchesSection && matchesSearch;
   });
 
   const handleAddEndpoint = () => {
@@ -124,7 +148,7 @@ const Monitoring = () => {
     };
     
     setEndpoints([...endpoints, endpoint]);
-    setNewEndpoint({ name: "", method: "GET", url: "", description: "" });
+    setNewEndpoint({ name: "", method: "GET", url: "", description: "", section: "" });
     setIsAddDialogOpen(false);
     toast({ title: "Success", description: "Endpoint added successfully" });
   };
@@ -238,6 +262,22 @@ const Monitoring = () => {
                 />
               </div>
               <div className="grid gap-2">
+                <Label htmlFor="section">Section</Label>
+                <Select 
+                  value={newEndpoint.section} 
+                  onValueChange={(value) => setNewEndpoint({...newEndpoint, section: value})}
+                >
+                  <SelectTrigger>
+                    <SelectValue placeholder="Select a section" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    {sections.map(section => (
+                      <SelectItem key={section} value={section}>{section}</SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+              </div>
+              <div className="grid gap-2">
                 <Label htmlFor="description">Description</Label>
                 <Textarea
                   id="description"
@@ -264,8 +304,23 @@ const Monitoring = () => {
           <Input 
             placeholder="Search endpoints..." 
             className="pl-10"
+            value={searchTerm}
+            onChange={(e) => setSearchTerm(e.target.value)}
           />
         </div>
+        
+        <Select value={selectedSection} onValueChange={setSelectedSection}>
+          <SelectTrigger className="w-48">
+            <SelectValue placeholder="Select section" />
+          </SelectTrigger>
+          <SelectContent>
+            <SelectItem value="all">All Sections</SelectItem>
+            {sections.map(section => (
+              <SelectItem key={section} value={section}>{section}</SelectItem>
+            ))}
+          </SelectContent>
+        </Select>
+        
         <Tabs value={filter} onValueChange={setFilter} className="w-auto">
           <TabsList>
             <TabsTrigger value="all">All</TabsTrigger>
@@ -337,6 +392,7 @@ const Monitoring = () => {
               <TableRow>
                 <TableHead>Status</TableHead>
                 <TableHead>Endpoint</TableHead>
+                <TableHead>Section</TableHead>
                 <TableHead>Method</TableHead>
                 <TableHead>Uptime</TableHead>
                 <TableHead>Response</TableHead>
@@ -359,6 +415,11 @@ const Monitoring = () => {
                       <div className="font-medium">{endpoint.name}</div>
                       <div className="text-sm text-muted-foreground">{endpoint.url}</div>
                     </div>
+                  </TableCell>
+                  <TableCell>
+                    <Badge className="bg-primary/10 text-primary border-primary/20">
+                      {endpoint.section}
+                    </Badge>
                   </TableCell>
                   <TableCell>
                     <Badge variant="outline">{endpoint.method}</Badge>
@@ -484,6 +545,22 @@ const Monitoring = () => {
                   value={editingEndpoint.url}
                   onChange={(e) => setEditingEndpoint({...editingEndpoint, url: e.target.value})}
                 />
+              </div>
+              <div className="grid gap-2">
+                <Label htmlFor="edit-section">Section</Label>
+                <Select 
+                  value={editingEndpoint.section || ""} 
+                  onValueChange={(value) => setEditingEndpoint({...editingEndpoint, section: value})}
+                >
+                  <SelectTrigger>
+                    <SelectValue placeholder="Select a section" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    {sections.map(section => (
+                      <SelectItem key={section} value={section}>{section}</SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
               </div>
               <div className="grid gap-2">
                 <Label htmlFor="edit-description">Description</Label>

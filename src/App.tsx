@@ -5,6 +5,10 @@ import { SidebarProvider } from "@/components/ui/sidebar";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import Index from "./pages/Index";
+import Login from "./pages/Login";
+import Register from "./pages/Register";
+import ForgotPassword from "./pages/ForgotPassword";
+import ChoosePlan from "./pages/ChoosePlan";
 import DashboardLayout from "./layouts/DashboardLayout";
 import Analytics from "./pages/Analytics";
 import Overview from "./pages/Overview";
@@ -26,6 +30,12 @@ const App = () => (
         <Routes>
           {/* Landing page */}
           <Route path="/" element={<Index />} />
+          
+          {/* Auth routes */}
+          <Route path="/login" element={<Login />} />
+          <Route path="/register" element={<Register />} />
+          <Route path="/forgot-password" element={<ForgotPassword />} />
+          <Route path="/choose-plan" element={<ChoosePlan />} />
           
           {/* Dashboard routes with sidebar */}
           <Route path="/dashboard" element={
