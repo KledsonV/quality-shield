@@ -5,7 +5,8 @@ import {
   TestTube, 
   Brain, 
   Settings,
-  BarChart3
+  BarChart3,
+  Users
 } from "lucide-react";
 import { NavLink, useLocation } from "react-router-dom";
 
@@ -52,6 +53,11 @@ const menuItems = [
     title: "AI Predictions", 
     url: "/dashboard/ai-predictions", 
     icon: Brain 
+  },
+  { 
+    title: "Users", 
+    url: "/dashboard/users", 
+    icon: Users 
   },
   { 
     title: "Settings", 

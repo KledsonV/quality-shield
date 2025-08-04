@@ -17,6 +17,7 @@ import Security from "./pages/Security";
 import Quality from "./pages/Quality";
 import AIPredictions from "./pages/AIPredictions";
 import Settings from "./pages/Settings";
+import UserManagement from "./pages/UserManagement";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -50,6 +51,7 @@ const App = () => (
             <Route path="quality" element={<Quality />} />
             <Route path="ai-predictions" element={<AIPredictions />} />
             <Route path="settings" element={<Settings />} />
+            <Route path="users" element={<UserManagement />} />
           </Route>
           
           {/* Catch-all route */}
